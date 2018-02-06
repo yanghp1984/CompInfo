@@ -1,0 +1,13 @@
+1、T_USER 用户名
+    USER_SID            用户序号                 NVARCHAR2(36)
+    USER_NAME           用户名                   NVARCHAR2(36)
+    PASSWORD_HASH       密码HASH值               NVARCHAR2(64)
+    CREDITS             积分                     INT
+    LAST_VISIT_IP       最近访问IP地址            NVARCHAR2(23)
+    LAST_VISIT_TIME     最近访问时间              DATETIME
+
+2、T_LOGIN_LOG 用户登录日志
+    LOG_SID             日志序号                  NVARCHAR2(36)
+    USER_SID            用户序号                  NVARCHAR2(36)
+    VISIT_IP            访问IP地址                NVARCHAR2(23)
+    VISIT_TIME          访问时间                  DATETIME

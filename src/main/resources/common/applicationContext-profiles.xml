@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation=
+	"http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd"
+	default-lazy-init="false">
+	
+	<description>配置 Spring Profile</description>
+	
+	<!-- context:property-placeholder,外在参数化配置方式，但在Spring配置文件中只能存在一份, ignore-unresolvable=true,表示忽略解析不到的属性。 -->
+	<context:property-placeholder location="classpath:profiles/connectionPool.properties" ignore-unresolvable="true" />
+	
+	<beans profile="development">
+		<context:property-placeholder location="classpath:profiles/development/database.properties" ignore-unresolvable="true" />
+	</beans>
+	
+	<beans profile="test">
+		<context:property-placeholder location="classpath:profiles/test/database.properties" ignore-unresolvable="true" />
+	</beans>
+	
+	<beans profile="production">
+		<context:property-placeholder location="classpath:profiles/production/database.properties" ignore-unresolvable="true" />
+	</beans>
+</beans>

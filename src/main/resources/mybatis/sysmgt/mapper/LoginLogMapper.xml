@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mybatis.sysmgt.mapper.LoginLogMapper">
+    <!-- 所有字段 -->
+    <sql id="allColumn">
+		t.LOG_SID, t.USER_SID, t.VISIT_IP, t.VISIT_TIME
+	</sql>
+
+    <select id="selectLoginLogByCondition" resultType="sysmgt.entity.LoginLogEntity"
+            parameterType="Map">
+        SELECT
+        <include refid="allColumn"/>
+        FROM T_LOGIN_LOG t
+        WHERE 1=1
+        <if test="logSid != null and logSid != ''">
+            AND t.LOG_SID = #{logSid}
+        </if>
+        <if test="userSid != null and userSid != ''">
+            AND t.USER_SID = #{userSid}
+        </if>
+        ORDER BY t.VISIT_TIME DESC
+    </select>
+
+    <insert id="insertLoginLog" parameterType="sysmgt.entity.LoginLogEntity">
+        <selectKey keyProperty="logSid" resultType="string" statementType="CALLABLE" order="BEFORE">
+            <!-- 调用函数，需要在数据库中建立函数 -->
+            select COMMON_PACKAGE.UUID() from dual
+        </selectKey>
+        INSERT INTO T_LOGIN_LOG(LOG_SID, USER_SID, VISIT_IP, VISIT_TIME)
+        VALUES(#{logSid}, #{userSid}, #{visitIp}, #{visitTime})
+    </insert>
+
+    <update id="updateLoginLog" parameterType="sysmgt.entity.LoginLogEntity">
+		UPDATE T_LOGIN_LOG
+		SET USER_SID = #{userSid},
+			VISIT_IP = #{visitIp},
+			VISIT_TIME = #{visitTime}
+		WHERE LOG_SID = #{logSid}
+	</update>
+
+    <delete id="deleteLoginLogList" parameterType="List">
+        DELETE FROM T_LOGIN_LOG
+        WHERE LOG_SID IN
+        <foreach collection="list" index="index" item="logSid" open="(" separator="," close=")">
+            #{logSid}
+        </foreach>
+    </delete>
+</mapper>

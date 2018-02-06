@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mybatis.sysmgt.mapper.UserMapper">
+    <!-- 所有字段 -->
+    <sql id="allColumn">
+		u.USER_SID, u.USER_NAME, u.PASSWORD_HASH, u.CREDITS, u.LAST_VISIT_IP, u.LAST_VISIT_TIME
+	</sql>
+    <sql id="getGuid">
+		select
+		substr(guid, 1, 8) || '-'  || substr(guid, 9, 4)  || '-' ||
+		substr(guid, 13, 4) || '-' || substr(guid, 17, 4) || '-' ||
+		substr(guid, 21, 12) as uuid
+		from
+		(select lower(sys_guid()) as guid from dual)
+	</sql>
+
+    <select id="selectUserByCondition" resultType="sysmgt.entity.UserEntity"
+            parameterType="Map">
+        SELECT
+        <include refid="allColumn"/>
+        FROM T_USER u
+        WHERE 1=1
+        <if test="userSid != null and userSid != ''">
+            AND u.USER_SID = #{userSid}
+        </if>
+        <if test="userName != null and userName != ''">
+            AND u.USER_NAME = #{userName}
+        </if>
+        ORDER BY u.USER_NAME
+    </select>
+
+    <insert id="insertUser" parameterType="sysmgt.entity.UserEntity">
+        <selectKey keyProperty="userSid" resultType="string" statementType="CALLABLE" order="BEFORE">
+            <!--
+                MySQL: select uuid()
+                Oracle:
+                    1.另一种方式
+                <include refid="getGuid" />
+             -->
+            <!-- 	2.调用函数，需要在数据库中建立函数 -->
+            select COMMON_PACKAGE.UUID() from dual
+        </selectKey>
+        INSERT INTO T_USER(USER_SID, USER_NAME, PASSWORD_HASH, CREDITS, LAST_VISIT_IP, LAST_VISIT_TIME)
+        VALUES(#{userSid}, #{userName}, #{passwordHash}, #{credits}, #{lastVisitIp}, #{lastVisitTime})
+    </insert>
+
+    <update id="updateUser" parameterType="sysmgt.entity.UserEntity">
+		UPDATE T_USER
+		SET USER_NAME = #{userName},
+			PASSWORD_HASH = #{passwordHash},
+			CREDITS = #{credits},
+			LAST_VISIT_IP = #{lastVisitIp},
+			LAST_VISIT_TIME = #{lastVisitTime}
+		WHERE USER_SID = #{userSid}
+	</update>
+
+    <delete id="deleteUserList" parameterType="List">
+        DELETE FROM T_USER
+        WHERE USER_SID IN
+        <foreach collection="list" index="index" item="userSid" open="(" separator="," close=")">
+            #{userSid}
+        </foreach>
+    </delete>
+</mapper>

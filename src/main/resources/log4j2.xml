@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd" >
+<!-- 
+	status 用于设置 log4j2 自身内部的信息输出，可以不设置
+	monitorInterval，用于设置自动检测和应用配置本身的间隔秒数
+-->
+<Configuration status="error" monitorInterval="300">
+	<Appenders>
+		<!-- 控制台日志 -->
+		<!-- 
+			1、PatternLayout 定义
+				%d		日志发生的时间
+				%p		日志级别
+				%t		线程名称
+				%c		日志消息所在类名
+				%l		代码中的行数
+				%m		消息内容
+				%n		新行
+				
+			2、日志级别定义为
+				ALL -> TRACE -> DEBUG -> INFO -> WARN -> ERROR -> FATAL -> OFF
+		-->
+		<Console name="Console" target="SYSTEM_OUT">
+			<PatternLayout pattern="%d{hh:mm:ss.SSS} %-5p %C{1} [%L] - %m%n" />
+		</Console>
+		
+		<!-- 文件日志 -->
+		<!-- append=false, 表示不添加，只保存最新一次运行的日志 -->
+		<File name="Temp" fileName="logs/temp.log" append="false">
+			<PatternLayout pattern="%d{yyyy-MM-dd hh:mm:ss.SSS} %-5p [%t] %C{3} [%L] - %m%n" />
+		</File>
+		
+		<File name="Error" fileName="logs/error.log" append="true">
+			<ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY" />
+			<PatternLayout pattern="%d{yyyy-MM-dd hh:mm:ss.SSS} %-5p [%t] %C{3} [%L] - %m%n" />
+		</File>
+		
+		<!-- 回滚日志文件 -->
+		<!-- filePattern 表示文件名的建立模式 -->
+		<RollingFile name="RollingFile" fileName="logs/app.log"
+			filePattern="logs/$${date:yyyy-MM}/app-%d{yyyy-MM-dd}-%i.log.gz">
+			<SizeBasedTriggeringPolicy size="2MB" />
+			<PatternLayout pattern="%d{yyyy-MM-dd hh:mm:ss.SSS} %-5p [%t] %C{3} [%L] - %m%n" />
+		</RollingFile>
+	</Appenders>
+	
+	<Loggers>
+		<!-- 过滤掉 spring 和 mybatis 的一些无用 DEBUG 信息 -->
+		<!-- additivity设为false，则子Logger只会在自己的appender里输出，而不会在父Logger的appender里输出。-->
+		<Logger name="mybatis" level="debug" additivity="false">
+			<AppenderRef ref="RollingFile" />
+			<AppenderRef ref="Temp" />
+		</Logger>
+		
+		<Root level="info">
+			<AppenderRef ref="RollingFile" />
+			<AppenderRef ref="Console" />
+			<AppenderRef ref="Temp" />
+			<AppenderRef ref="Error" />
+		</Root>
+	</Loggers>
+</Configuration>

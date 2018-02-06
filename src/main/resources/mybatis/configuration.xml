@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+	PUBLIC "-//mybatis.org//DTD config 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<settings>
+		<!-- 是否开启驼峰命名规则的映射（如：firstName => firstName） -->
+		<setting name="mapUnderscoreToCamelCase" value="true"/>
+		<!-- log4j2 日志输出 -->
+		<setting name="logImpl" value="LOG4J2" />
+	</settings>
+	
+	<plugins>
+		<!-- MyBatis-PageHelper 分页插件 -->
+		<plugin interceptor="com.github.pagehelper.PageInterceptor">
+			<!-- 指定分页插件使用哪种方言。可以使用以下缩写： -->
+			<!-- oracle, mysql, sqlserver, sqlite, mariadb, hsqldb, postgresql, db2, informix, h2, sqlserver2012, derby -->
+			<property name="helperDialect" value="mysql" />
+			
+			<!-- 分页合理化参数，默认为 false。当设置为 true时，pageNum <= 0 时会查询第一页，pageNum > pages(总页数）时，会查询最后一页 -->
+			<property name="reasonable" value="true" />
+			
+			<!-- 是否允许在运行时根据多数据源自动识别对应方言分页 -->
+			<property name="autoRuntimeDialect" value="false" />
+		</plugin>
+	</plugins>
+
+	<!-- 
+		使用 mapper 映射文件自动扫描后，将不再需要手动配置 mapper。
+	<mappers>
+			1、文件路径引入
+			mapper resource="mybatis/sysmgt/mapper/UserMapper.xml
+			2、包名引入
+			package name="mybtis.sysmgt"
+		<mapper resource="mybatis/sysmgt/mapper/AddressMapper.xml"/>
+		<mapper resource="mybatis/sysmgt/mapper/MeetingMapper.xml"/>
+		<mapper resource="mybatis/sysmgt/mapper/NoticeMapper.xml"/>
+		<mapper resource="mybatis/sysmgt/mapper/ScheduleMapper.xml"/>
+		<mapper resource="mybatis/sysmgt/mapper/UserMapper.xml"/>
+	</mappers>
+	-->
+</configuration>
+
+<!-- 
+	系统定义的别名（都支持数组）
+	别名				映射的类型
+	_byte			byte
+	_long			long
+	_short			short
+	_int			int
+	_integer		int
+	_double			double
+	_float			float
+	_boolean		boolean
+	_string			String
+	byte			Byte
+	long			Long
+	short			Short
+	int				Integer
+	integer			Integer
+	double			Double
+	float			Float
+	boolean			Boolean
+	date			Date
+	decimal			BigDecimal
+	bigdecimal		BigDecimal
+	object			Object
+	map				Map
+	hashmap			HashMap
+	list			List
+	arraylist		ArrayList
+	collection		Collection
+	iterator		Iterator
+	ResultSet		ResultSet
+ -->
