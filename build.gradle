@@ -21,7 +21,7 @@ dependencies {
     compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.9.0'
     compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.9.0'
 
-    // 数据库
+    // 数据库驱动、连接池、MyBatis和分页插件
     compile group: 'com.github.noraui', name: 'ojdbc8', version: '12.2.0.1'
     compile group: 'com.microsoft.sqlserver', name: 'mssql-jdbc', version: '6.2.2.jre8'
     compile group: 'mysql', name: 'mysql-connector-java', version: '6.0.6'

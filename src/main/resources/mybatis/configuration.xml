@@ -15,7 +15,7 @@
 		<plugin interceptor="com.github.pagehelper.PageInterceptor">
 			<!-- 指定分页插件使用哪种方言。可以使用以下缩写： -->
 			<!-- oracle, mysql, sqlserver, sqlite, mariadb, hsqldb, postgresql, db2, informix, h2, sqlserver2012, derby -->
-			<property name="helperDialect" value="mysql" />
+			<property name="helperDialect" value="oracle" />
 			
 			<!-- 分页合理化参数，默认为 false。当设置为 true时，pageNum <= 0 时会查询第一页，pageNum > pages(总页数）时，会查询最后一页 -->
 			<property name="reasonable" value="true" />

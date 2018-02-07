@@ -68,7 +68,7 @@
 	<bean id="wall-filter" class="com.alibaba.druid.wall.WallFilter">
 		<!-- 有些时候，一些应用框架做了自己的JDBC Proxy Driver，是DruidDataSource 无法正确识别数据库的类型，则需要特别指定 -->
 		<!-- mysql, oracle, sqlserver, postgres -->
-		<property name="dbType" value="mysql" />
+		<property name="dbType" value="oracle" />
 		<!-- 对被认为是攻击的SQL，进行 log.error 输出 -->
 		<property name="logViolation" value="false" />
 		<!-- 对被认为是攻击的SQL，抛出SQLException -->
