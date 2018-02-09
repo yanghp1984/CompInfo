@@ -19,8 +19,8 @@
         <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Repository" />
     </context:component-scan>
 
-    <!-- 自定义类型转换支持 -->
     <bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+        <description>自定义类型转换支持</description>
         <property name="converters">
             <list>
                 <bean class="common.converter.StringToDateConverter"/>
@@ -60,8 +60,8 @@
     -->
     <mvc:default-servlet-handler />
 
-    <!-- JSP 视图解析器 -->
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <description>JSP 视图解析器</description>
         <property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
         <property name="contentType" value="text/html;charset=UTF-8" />
         <property name="prefix" value="/WEB-INF/jsp/" />
