@@ -1,11 +1,10 @@
-package test.sysmgt;
+package sysmgt.service;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import sysmgt.entity.UserEntity;
-import sysmgt.service.UserService;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -102,10 +101,10 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testValid() {
+    public void testUpdateAndValidate() {
         UserService userService = (UserService) ctx.getBean("userServiceImpl");
-        System.out.println("\nvalid:");
-        boolean flag = userService.valid("admin", "admin");
+        System.out.println("\nupdateAndValidate:");
+        boolean flag = userService.updateAndValidate("admin", "admin", "192.0.0.1");
         System.out.println(flag);
         assertTrue(flag);
     }

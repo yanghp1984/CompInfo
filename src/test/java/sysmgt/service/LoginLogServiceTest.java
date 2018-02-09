@@ -1,11 +1,11 @@
-package test.sysmgt;
+package sysmgt.service;
 
+import common.bean.Paging;
 import org.apache.commons.collections.CollectionUtils;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import sysmgt.entity.LoginLogEntity;
-import sysmgt.service.LoginLogService;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -94,5 +94,30 @@ public class LoginLogServiceTest {
             System.out.println(entity.getLogSid());
             assertTrue(true);
         }
+    }
+
+    @Test
+    public void testFindLoginLogPageByCondition() {
+        System.out.println("\nFindLoginLogPageByCondition:");
+        LoginLogService service = (LoginLogService) ctx.getBean("loginLogServiceImpl");
+        Paging page = new Paging();
+        page.setPageSize(2);
+        page.clearRows();
+
+        LoginLogEntity log = new LoginLogEntity();
+        log.setUserSid("c273e490-b0de-4acd-9522-f0ea5c53c296");
+        List<LoginLogEntity> list = null;
+        try {
+            page = service.findLoginLogPageByCondition(log, page);
+            list = (List<LoginLogEntity>) page.getRows();
+            if (CollectionUtils.isNotEmpty(list)) {
+                for (LoginLogEntity lg : list) {
+                    System.out.println(lg);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        assertNotNull(list);
     }
 }

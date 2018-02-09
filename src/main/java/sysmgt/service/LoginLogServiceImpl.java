@@ -1,11 +1,12 @@
 package sysmgt.service;
 
-import common.dao.BaseDAO;
+import common.bean.Paging;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import sysmgt.dao.LoginLogDAO;
 import sysmgt.entity.LoginLogEntity;
 
 import java.util.ArrayList;
@@ -21,11 +22,9 @@ import java.util.Map;
  */
 @Lazy
 @Service
-public class LoginLogServiceImpl extends BaseDAO implements LoginLogService {
-    /**
-     * SQL 命名空间
-     */
-    private static final String SQL_NS = "mybatis.sysmgt.mapper.LoginLogMapper.";
+public class LoginLogServiceImpl implements LoginLogService {
+    @Autowired
+    private LoginLogDAO loginLogDAO;
 
     /**
      * 根据序号查询登录日志
@@ -39,7 +38,10 @@ public class LoginLogServiceImpl extends BaseDAO implements LoginLogService {
         if (StringUtils.isNotBlank(sid)) {
             Map<String, String> map = new HashMap<String, String>();
             map.put("logSid", sid);
-            entity = baseMyBatisDAO.findUnique(SQL_NS + "selectLoginLogByCondition", map);
+            List<LoginLogEntity> list = loginLogDAO.findLoginLogListByCondition(map);
+            if (CollectionUtils.isNotEmpty(list)) {
+                entity = list.get(0);
+            }
         }
         return entity;
     }
@@ -52,7 +54,19 @@ public class LoginLogServiceImpl extends BaseDAO implements LoginLogService {
      */
     @Override
     public List<LoginLogEntity> findLoginLogListByCondition(Map<String, String> parameters) {
-        return baseMyBatisDAO.findForList(SQL_NS + "selectLoginLogByCondition", parameters);
+        return loginLogDAO.findLoginLogListByCondition(parameters);
+    }
+
+    /**
+     * 根据条件和分页参数，查询登录日志数据并分页
+     *
+     * @param entity 查询条件
+     * @param paging 分页参数
+     * @return 分页数据
+     */
+    @Override
+    public Paging findLoginLogPageByCondition(LoginLogEntity entity, Paging paging) {
+        return loginLogDAO.findLoginLogPageByCondition(entity, paging);
     }
 
     /**
@@ -61,12 +75,9 @@ public class LoginLogServiceImpl extends BaseDAO implements LoginLogService {
      * @param entity 登录日志
      * @return 序号，null 表示失败。
      */
-    @Transactional
     @Override
     public String addLoginLog(LoginLogEntity entity) {
-        entity.setLogSid(null);
-        baseMyBatisDAO.insert(SQL_NS + "insertLoginLog", entity);
-        return entity.getLogSid();
+        return loginLogDAO.addLoginLog(entity);
     }
 
     /**
@@ -74,10 +85,9 @@ public class LoginLogServiceImpl extends BaseDAO implements LoginLogService {
      *
      * @param entity 登录日志
      */
-    @Transactional
     @Override
     public void updateLoginLog(LoginLogEntity entity) {
-        baseMyBatisDAO.update(SQL_NS + "updateLoginLog", entity);
+        loginLogDAO.updateLoginLog(entity);
     }
 
     /**
@@ -85,13 +95,12 @@ public class LoginLogServiceImpl extends BaseDAO implements LoginLogService {
      *
      * @param sid 序号
      */
-    @Transactional
     @Override
     public void deleteLoginLog(String sid) {
         if (StringUtils.isNotBlank(sid)) {
             List<String> sidList = new ArrayList<String>();
             sidList.add(sid);
-            baseMyBatisDAO.delete(SQL_NS + "deleteLoginLogList", sidList);
+            loginLogDAO.deleteLoginLogList(sidList);
         }
     }
 
@@ -100,11 +109,8 @@ public class LoginLogServiceImpl extends BaseDAO implements LoginLogService {
      *
      * @param sidList 序号列表
      */
-    @Transactional
     @Override
     public void deleteLoginLogList(List<String> sidList) {
-        if (CollectionUtils.isNotEmpty(sidList)) {
-            baseMyBatisDAO.delete(SQL_NS + "deleteLoginLogList", sidList);
-        }
+        loginLogDAO.deleteLoginLogList(sidList);
     }
 }

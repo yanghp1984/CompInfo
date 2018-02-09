@@ -1,5 +1,6 @@
 package sysmgt.service;
 
+import common.bean.Paging;
 import sysmgt.entity.LoginLogEntity;
 
 import java.util.List;
@@ -27,6 +28,15 @@ public interface LoginLogService {
      * @return 登录日志列表
      */
     List<LoginLogEntity> findLoginLogListByCondition(Map<String, String> parameters);
+
+    /**
+     * 根据条件和分页参数，查询登录日志数据并分页
+     *
+     * @param entity 查询条件
+     * @param paging 分页参数
+     * @return 分页数据
+     */
+    Paging findLoginLogPageByCondition(LoginLogEntity entity, Paging paging);
 
     /**
      * 添加登录日志
