@@ -3,6 +3,7 @@ package sysmgt.service;
 import java.util.List;
 import java.util.Map;
 
+import common.bean.Paging;
 import sysmgt.entity.UserEntity;
 
 /**
@@ -27,6 +28,15 @@ public interface UserService {
      * @return 用户信息列表
      */
     List<UserEntity> findUserListByCondition(Map<String, String> parameters);
+
+    /**
+     * 根据条件和查询参数，查询用户信息并分页
+     *
+     * @param entity 查询条件
+     * @param paging 分页参数
+     * @return 分页数据
+     */
+    Paging findUserPageByCondition(UserEntity entity, Paging paging);
 
     /**
      * 添加用户信息
@@ -58,13 +68,14 @@ public interface UserService {
     void deleteUserList(List<String> sidList);
 
     /**
-     * 验证用户身份
+     * 验证用户身份，如果成功同时更新登录日志
      *
      * @param username 用户名
      * @param password 密码
+     * @param ip IP地址
      * @return True 表示成功，False 表示失败。
      */
-    boolean valid(String username, String password);
+    boolean updateAndValidate(String username, String password, String ip);
 
     /**
      * 验证用户是否已经存在

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+         version="3.1">
+    <!-- 激活 Tomcat 的 defaultServlet 来处理静态文件 -->
+    <servlet-mapping>
+        <servlet-name>default</servlet-name>
+        <url-pattern>/images/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>default</servlet-name>
+        <url-pattern>/css/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>default</servlet-name>
+        <url-pattern>/js/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>default</servlet-name>
+        <url-pattern>/upload/*</url-pattern>
+    </servlet-mapping>
+
+    <context-param>
+        <description>加载 Spring 配置文件</description>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>classpath*:**/applicationContext-*.xml</param-value>
+    </context-param>
+
+    <context-param>
+        <description>多环境配置（默认环境）</description>
+        <param-name>spring.profiles.default</param-name>
+        <param-value>development</param-value>
+    </context-param>
+
+    <servlet>
+        <!-- 运行 tomcat后，在浏览器中输入 http://IP:port/项目/druid 即可查看 -->
+        <description>Druid 内置了一个 DruidStatView，用于显示Druidr的统计信息</description>
+        <servlet-name>DruidStatView</servlet-name>
+        <servlet-class>com.alibaba.druid.support.http.StatViewServlet</servlet-class>
+        <!-- 是否允许清空统计数据 -->
+        <init-param>
+            <param-name>resetEnable</param-name>
+            <param-value>false</param-value>
+        </init-param>
+        <!-- 登录用户名 -->
+        <init-param>
+            <param-name>loginUsername</param-name>
+            <param-value>admin</param-value>
+        </init-param>
+        <!-- 登录密码 -->
+        <init-param>
+            <param-name>loginPassword</param-name>
+            <param-value>admin</param-value>
+        </init-param>
+        <load-on-startup>0</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DruidStatView</servlet-name>
+        <url-pattern>/druid/*</url-pattern>
+    </servlet-mapping>
+
+    <filter>
+        <description>采集 web-jdbc 关联监控的数据</description>
+        <filter-name>druidWebStatFilter</filter-name>
+        <filter-class>com.alibaba.druid.support.http.WebStatFilter</filter-class>
+        <!-- 排除一些不要的 url -->
+        <init-param>
+            <param-name>exclusions</param-name>
+            <param-value>/images/*, /js/*, /css/*, /styles/*, /druid/*, *.js, *.css, *.gif, *.jpg, *.png, *.ico, *.swf</param-value>
+        </init-param>
+        <!-- 配置 pirincipalSessionName, 使得 Druid 能够知道当前的 session 的用户是谁 -->
+        <init-param>
+            <param-name>principalSessionName</param-name>
+            <param-value>loginUser</param-value>
+        </init-param>
+        <!-- 配置 profileEnable，使得能够监控单个 url 调用的SQL列表 -->
+        <init-param>
+            <param-name>profileEnable</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>druidWebStatFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
+</web-app>
