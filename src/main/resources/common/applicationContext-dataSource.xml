@@ -1,77 +1,75 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation=
-	"http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd"
-	default-lazy-init="false">
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-	<description>配置主数据源</description>
+    <description>数据源配置</description>
 
-	<!-- 配置 JDBC 数据源 -->
-	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
-		destroy-method="close">
-		<property name="driverClassName" value="${oracle.driverClassName}" />
-		<property name="url" value="${oracle.url}" />
-		<property name="username" value="${oracle.username}" />
-		<property name="password" value="${oracle.password}" />
-		
-		<!-- 初始物理连接数量 -->
-		<property name="initialSize" value="${druid.initialSize}" />
-		<!-- 最小连接池数量 -->
-		<property name="minIdle" value="${druid.minIdle}" />
-		<!-- 最大连接池数量 -->
-		<property name="maxActive" value="${druid.maxActive}" />
-		<!-- 获取连接的最大等待时间 -->
-		<property name="maxWait" value="${druid.maxWait}" />
-		<!-- 逐出连接的检测时间间隔 -->
-		<property name="timeBetweenEvictionRunsMillis" value="${druid.timeBetweenEvictionRunsMillis}" />
-		<!-- 一个连接在池中的最小生存时间，单位毫秒 -->
-		<property name="minEvictableIdleTimeMillis" value="${druid.minEvictableIdleTimeMillis}" />
-		<!-- 检测连接有效的 SQL查询 -->
-		<property name="validationQuery" value="${druid.validationQuery}" />
-		<!-- 连接空闲时测试是否有效 -->
-		<property name="testWhileIdle" value="${druid.testWhileIdle}" />
-		<!-- 获取连接时测试是否有效 -->
-		<property name="testOnBorrow" value="${druid.testOnBorrow}" />
-		<!-- 归还连接时测试是否有效 -->
-		<property name="testOnReturn" value="${druid.testOnReturn}" />
-		<!-- 是否缓存 preparedStatement，也就是 PSCache -->
-		<property name="poolPreparedStatements" value="${druid.poolPreparedStatements}" />
-		<!-- Statement 缓存大小 -->
-		<property name="maxPoolPreparedStatementPerConnectionSize" value="${druid.maxPoolPreparedStatementPerConnectionSize}" />
-		<!-- 合并多个 DruidDataSource 的监控数据 -->
-		<property name="useGlobalDataSourceStat" value="${druid.useGlobalDataSourceStat}" />
-		
-		<property name="proxyFilters">
-			<list>
-				<ref bean="stat-filter" />
-				<ref bean="wall-filter" />
-			</list>
-		</property>
-	</bean>
-	
-	<!-- Druid 内置提供一个 StatFilter，用于统计监控信息 -->
-	<bean id="stat-filter" class="com.alibaba.druid.filter.stat.StatFilter">
-		<!-- 打开SQL合并功能 -->
-		<property name="mergeSql" value="false" />
-		<!-- 配置记录SQL慢的标题，执行时间超过slowSqlMillis的就是慢，缺省值3000 -->
-		<property name="slowSqlMillis" value="3000" />
-		<property name="logSlowSql" value="true" />
-	</bean>
-	
-	<bean id="wall-filter" class="com.alibaba.druid.wall.WallFilter">
-		<!-- 有些时候，一些应用框架做了自己的JDBC Proxy Driver，是DruidDataSource 无法正确识别数据库的类型，则需要特别指定 -->
-		<!-- mysql, oracle, sqlserver, postgres -->
-		<property name="dbType" value="oracle" />
-		<!-- 对被认为是攻击的SQL，进行 log.error 输出 -->
-		<property name="logViolation" value="false" />
-		<!-- 对被认为是攻击的SQL，抛出SQLException -->
-		<property name="throwException" value="true" />
-		<property name="config" value="wall-config" />
-	</bean>
-	
-	<bean id="wall-config" class="com.alibaba.druid.wall.WallConfig">
-		<!-- 是否允许一次执行多条语句，缺省关闭  -->
-		<property name="multiStatementAllow" value="true" />
-	</bean>
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
+          destroy-method="close">
+        <description>主数据源</description>
+        <property name="driverClassName" value="${oracle.driverClassName}" />
+        <property name="url" value="${oracle.url}" />
+        <property name="username" value="${oracle.username}" />
+        <property name="password" value="${oracle.password}" />
+
+        <!-- 初始物理连接数量 -->
+        <property name="initialSize" value="${druid.initialSize}" />
+        <!-- 最小连接池数量 -->
+        <property name="minIdle" value="${druid.minIdle}" />
+        <!-- 最大连接池数量 -->
+        <property name="maxActive" value="${druid.maxActive}" />
+        <!-- 获取连接的最大等待时间 -->
+        <property name="maxWait" value="${druid.maxWait}" />
+        <!-- 逐出连接的检测时间间隔 -->
+        <property name="timeBetweenEvictionRunsMillis" value="${druid.timeBetweenEvictionRunsMillis}" />
+        <!-- 一个连接在池中的最小生存时间，单位毫秒 -->
+        <property name="minEvictableIdleTimeMillis" value="${druid.minEvictableIdleTimeMillis}" />
+        <!-- 检测连接有效的 SQL查询 -->
+        <property name="validationQuery" value="${druid.validationQuery}" />
+        <!-- 连接空闲时测试是否有效 -->
+        <property name="testWhileIdle" value="${druid.testWhileIdle}" />
+        <!-- 获取连接时测试是否有效 -->
+        <property name="testOnBorrow" value="${druid.testOnBorrow}" />
+        <!-- 归还连接时测试是否有效 -->
+        <property name="testOnReturn" value="${druid.testOnReturn}" />
+        <!-- 是否缓存 preparedStatement，也就是 PSCache -->
+        <property name="poolPreparedStatements" value="${druid.poolPreparedStatements}" />
+        <!-- Statement 缓存大小 -->
+        <property name="maxPoolPreparedStatementPerConnectionSize" value="${druid.maxPoolPreparedStatementPerConnectionSize}" />
+        <!-- 合并多个 DruidDataSource 的监控数据 -->
+        <property name="useGlobalDataSourceStat" value="${druid.useGlobalDataSourceStat}" />
+
+        <property name="proxyFilters">
+            <list>
+                <ref bean="stat-filter" />
+                <ref bean="wall-filter" />
+            </list>
+        </property>
+    </bean>
+
+    <!-- Druid 内置提供一个 StatFilter，用于统计监控信息 -->
+    <bean id="stat-filter" class="com.alibaba.druid.filter.stat.StatFilter">
+        <!-- 打开SQL合并功能 -->
+        <property name="mergeSql" value="false" />
+        <!-- 配置记录SQL慢的标题，执行时间超过slowSqlMillis的就是慢，缺省值3000 -->
+        <property name="slowSqlMillis" value="3000" />
+        <property name="logSlowSql" value="true" />
+    </bean>
+
+    <bean id="wall-filter" class="com.alibaba.druid.wall.WallFilter">
+        <!-- 有些时候，一些应用框架做了自己的JDBC Proxy Driver，是DruidDataSource 无法正确识别数据库的类型，则需要特别指定 -->
+        <!-- mysql, oracle, sqlserver, postgres -->
+        <property name="dbType" value="oracle" />
+        <!-- 对被认为是攻击的SQL，进行 log.error 输出 -->
+        <property name="logViolation" value="false" />
+        <!-- 对被认为是攻击的SQL，抛出SQLException -->
+        <property name="throwException" value="true" />
+        <property name="config" value="wall-config" />
+    </bean>
+
+    <bean id="wall-config" class="com.alibaba.druid.wall.WallConfig">
+        <!-- 是否允许一次执行多条语句，缺省关闭  -->
+        <property name="multiStatementAllow" value="true" />
+    </bean>
 </beans>

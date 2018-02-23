@@ -4,6 +4,7 @@ import java.util.*;
 
 import common.bean.Paging;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -86,43 +87,6 @@ public class UserServiceImpl implements UserService {
         userDAO.deleteUserList(sidList);
     }
 
-    /**
-     * 验证用户身份，如果成功同时更新登录日志
-     *
-     * @param username 用户名
-     * @param password 密码
-     * @param ip IP地址
-     * @return True 表示成功，False 表示失败。
-     */
-    @Override
-    public boolean updateAndValidate(String username, String password, String ip) {
-        boolean flag = false;
-        if (StringUtils.isNotBlank(username) && StringUtils.isNotBlank(password)) {
-            Map<String, String> map = new HashMap<String, String>();
-            map.put("userName", username);
-            List<UserEntity> list = userDAO.findUserListByCondition(map);
-            if (CollectionUtils.isNotEmpty(list)) {
-                UserEntity user = list.get(0);
-                String pwd = StringEncrypter.getHashValue(password, GlobalConstant.HASH_COMPUTE_TYPE);
-                if (pwd.equals(user.getPasswordHash())) {
-                    // 身份验证成功, 更新用户信息和登录日志
-                    Date time = new Date();
-                    user.setLastVisitIp(ip);
-                    user.setLastVisitTime(time);
-                    userDAO.updateUser(user);
-
-                    LoginLogEntity log = new LoginLogEntity();
-                    log.setUserSid(user.getUserSid());
-                    log.setVisitIp(ip);
-                    log.setVisitTime(time);
-                    loginLogDAO.addLoginLog(log);
-                    flag = true;
-                }
-            }
-        }
-        return flag;
-    }
-
     @Override
     public boolean isExisted(String username) {
         boolean flag = false;
@@ -137,4 +101,40 @@ public class UserServiceImpl implements UserService {
         return flag;
     }
 
+    /**
+     * 根据登录信息查询用户
+     *
+     * @param username     用户名
+     * @param passwordHash 密码
+     * @UserEntity 用户信息
+     */
+    @Override
+    public UserEntity findUserByLoginInfo(String username, String passwordHash) {
+        UserEntity user = null;
+        if (StringUtils.isNotBlank(username) && StringUtils.isNotBlank(passwordHash)) {
+            Map<String, String> map = new HashMap<String, String>();
+            map.put("userName", username);
+            List<UserEntity> list = userDAO.findUserListByCondition(map);
+            if (CollectionUtils.isNotEmpty(list)) {
+                UserEntity entity = list.get(0);
+                if (passwordHash.equals(entity.getPasswordHash())) {
+                    user = entity;
+                }
+            }
+        }
+        return user;
+    }
+
+    /**
+     * 更新用户登录日志
+     */
+    @Override
+    public void addLoginLog(UserEntity user) {
+        LoginLogEntity log = new LoginLogEntity();
+        log.setUserSid(user.getUserSid());
+        log.setVisitIp(user.getLastVisitIp());
+        log.setVisitTime(user.getLastVisitTime());
+        loginLogDAO.addLoginLog(log);
+        userDAO.updateUser(user);
+    }
 }

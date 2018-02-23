@@ -1,38 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:aop="http://www.springframework.org/schema/aop"
-	xmlns:tx="http://www.springframework.org/schema/tx"
-	xsi:schemaLocation=
-	"http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
-	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
-	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd"
-	default-lazy-init="false">
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 
-	<description>数据库事务管理</description>
-	
-	<!-- 事务管理器 -->
-	<bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-		<property name="dataSource" ref="dataSource" />
-	</bean>
-	
-	<!-- 配置哪些类的哪些方法参与事务 -->
-	<aop:config>
-		<aop:pointcut id="globalManagerMethod" expression="execution(* *..service..*(..))"/>
-		<aop:advisor pointcut-ref="globalManagerMethod" advice-ref="txAdvice"/>
-	</aop:config>
-	
-	<!-- 配置事务的传播特性 -->
-	<tx:advice id="txAdvice" transaction-manager="txManager">
-		<tx:attributes>
-			<!-- 事务的默认传播属性为 REQUIRED. -->
-			<tx:method name="add*" />
-			<tx:method name="save*" />
-			<tx:method name="delete*" />
-			<tx:method name="modify*" />
-			<tx:method name="update*" />
-			<tx:method name="batch*" />
-			<tx:method name="*" read-only="true"/>
-		</tx:attributes>
-	</tx:advice>
+    <description>声明式事务管理器</description>
+
+    <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <description>事务管理器</description>
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <aop:config>
+        <!--配置哪些类的哪些方法参与事务-->
+        <aop:pointcut id="globalManagerMethod" expression="execution(* *..service..*(..))"/>
+        <aop:advisor pointcut-ref="globalManagerMethod" advice-ref="txAdvice"/>
+    </aop:config>
+
+    <tx:advice id="txAdvice" transaction-manager="txManager">
+        <!--配置事务的传播特性-->
+        <tx:attributes>
+            <!-- 事务的默认传播属性为 REQUIRED. -->
+            <tx:method name="add*"/>
+            <tx:method name="save*"/>
+            <tx:method name="delete*"/>
+            <tx:method name="modify*"/>
+            <tx:method name="update*"/>
+            <tx:method name="batch*"/>
+            <tx:method name="*" read-only="true"/>
+        </tx:attributes>
+    </tx:advice>
 </beans>

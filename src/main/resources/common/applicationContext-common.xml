@@ -2,18 +2,24 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation=
-               "http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
-	            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd"
-       default-lazy-init="false">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
     <description>共同配置</description>
 
-    <!-- 注解注入扫描配置 -->
-    <!-- 扫描@Service, @Repository，排除@Controller -->
+    <!-- 扫描注解，扫描@Service, @Repository，排除@Controller -->
     <context:component-scan base-package="**.service,**.dao" use-default-filters="false">
         <context:include-filter type="annotation" expression="org.springframework.stereotype.Service"/>
         <context:include-filter type="annotation" expression="org.springframework.stereotype.Repository"/>
         <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
     </context:component-scan>
+
+    <!-- 容器级的国际化信息资源, Bean名称只能为messageSource -->
+    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+        <property name="basenames">
+            <list>
+                <value>i18n.resource</value>
+            </list>
+        </property>
+    </bean>
 </beans>

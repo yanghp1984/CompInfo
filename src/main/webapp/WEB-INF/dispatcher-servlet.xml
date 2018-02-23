@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+    <description>SpringMVC拦截器配置</description>
+
+    <!-- 注解注入扫描配置 -->
+    <!-- 排除@Service, @Repository，扫描@Controller -->
+    <context:component-scan base-package="**.controller, **.remote" use-default-filters="false">
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service"/>
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Repository"/>
+    </context:component-scan>
+
+    <!--
+        如何让Spring框架能够捕获所有URL的请求，同时又将静态资源的请求转由Web容器处理，即不处理静态资源，
+            是可将DispatcherServlet的请求映射配置为"/"的前提。
+        两种经典解决方案之一：
+            1、先调整web.xml中的DispatcherServlet的配置，使其可以捕获所有的请求；
+            2、采用<mvc:default-servlet-handler />。会在Spring MVC上下文中定义
+                一个org.springframework.web.servlet.resource.DefaultServletHttpRequestHandler，
+                它会像一个检查员，对进入DispatcherServlet的URL进行筛查，如果发现是静态资源的请求，
+                就将该请求转由Web应用服务器默认的Servlet处理，如果不是静态资源的请求，才由DispatcherServlet继续处理。
+    -->
+    <!--<mvc:default-servlet-handler />-->
+
+    <!-- 配置视图解析器，将ModelAndView及字符串解析为具体的页面 -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <description>JSP 视图解析器</description>
+        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+        <property name="contentType" value="text/html;charset=UTF-8"/>
+        <property name="prefix" value="/WEB-INF/jsp/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+</beans>

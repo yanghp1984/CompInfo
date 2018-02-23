@@ -1,5 +1,6 @@
 package sysmgt.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -68,20 +69,26 @@ public interface UserService {
     void deleteUserList(List<String> sidList);
 
     /**
-     * 验证用户身份，如果成功同时更新登录日志
-     *
-     * @param username 用户名
-     * @param password 密码
-     * @param ip IP地址
-     * @return True 表示成功，False 表示失败。
-     */
-    boolean updateAndValidate(String username, String password, String ip);
-
-    /**
      * 验证用户是否已经存在
      *
      * @param username 用户名
-     * @return 表示已存在，False 表示不存在。
+     * @return True 表示已存在，False 表示不存在。
      */
     boolean isExisted(String username);
+
+    /**
+     * 根据登录信息查询用户
+     *
+     * @param username     用户名
+     * @param passwordHash 密码
+     * @UserEntity 用户信息
+     */
+    UserEntity findUserByLoginInfo(String username, String passwordHash);
+
+    /**
+     * 更新用户日志
+     *
+     * @param user   用户信息
+     */
+    void addLoginLog(UserEntity user);
 }

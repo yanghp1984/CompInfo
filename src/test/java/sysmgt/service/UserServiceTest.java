@@ -1,15 +1,14 @@
 package sysmgt.service;
 
+import common.constant.GlobalConstant;
+import common.util.StringEncrypter;
 import org.apache.commons.collections.CollectionUtils;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import sysmgt.entity.UserEntity;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -101,12 +100,14 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testUpdateAndValidate() {
+    public void testAddLoginLog() {
         UserService userService = (UserService) ctx.getBean("userServiceImpl");
-        System.out.println("\nupdateAndValidate:");
-        boolean flag = userService.updateAndValidate("admin", "admin", "192.0.0.1");
-        System.out.println(flag);
-        assertTrue(flag);
+        System.out.println("\naddLoginLog:");
+        String username = "admin";
+        String passwordHash = StringEncrypter.getHashValue("admin", GlobalConstant.HASH_COMPUTE_TYPE);
+        UserEntity userEntity = userService.findUserByLoginInfo(username, passwordHash);
+        userService.addLoginLog(userEntity);
+        assertNotNull(userEntity);
     }
 
     @Test
@@ -116,5 +117,18 @@ public class UserServiceTest {
         boolean flag = userService.isExisted("yh");
         System.out.println(flag);
         assertTrue(flag);
+    }
+
+    /**
+     * 测试容器级的国际化信息资源
+     */
+    @Test
+    public void testI18n() {
+        System.out.println("\n测试容器级的国际化信息资源 testI18n:");
+        Object[] params = {"John", new GregorianCalendar().getTime()};
+        String str1 = ctx.getMessage("greeting.common", params, Locale.US);
+        String str2 = ctx.getMessage("greeting.common", params, Locale.CHINA);
+        System.out.println(str1);
+        System.out.println(str2);
     }
 }
