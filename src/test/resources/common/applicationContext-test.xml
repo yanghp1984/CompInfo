@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <description>学习示例及测试相关配置，仅用于开发和测试环节。</description>
+
+    <!-- 代理增强目标 -->
+    <bean id="worklogTarget" class="aop.advice.WorklogServiceImpl"/>
+    <!-- 前置增强 -->
+    <bean id="worklogBeforeAdvice" class="aop.advice.WorklogBeforeAdvice"/>
+    <!-- 后置增强 -->
+    <bean id="worklogAfterAdvice" class="aop.advice.WorklogAfterAdvice"/>
+    <!-- 环绕增强 -->
+    <bean id="worklogAroundAdvice" class="aop.advice.WorklogInterceptor"/>
+    <!-- 异常抛出增强 -->
+    <bean id="worklogThrowsAdvice" class="aop.advice.WorklogThrowsAdvice"/>
+    <!-- 引介增强 -->
+    <bean id="pmonitor" class="aop.advice.ControllablePerformanceMonitor"/>
+    <bean id="worklogService" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <!-- 引介增强所实现的接口 -->
+        <property name="interfaces" value="aop.advice.Monitorable"/>
+        <property name="interceptorNames">
+            <list>
+                <idref bean="worklogBeforeAdvice"/>
+                <idref bean="worklogAfterAdvice"/>
+                <idref bean="worklogAroundAdvice"/>
+                <idref bean="worklogThrowsAdvice"/>
+                <idref bean="pmonitor"/>
+            </list>
+        </property>
+        <property name="target" ref="worklogTarget"/>
+        <!-- 不使用JDK动态代理，而使用CGlib动态代理 -->
+        <property name="proxyTargetClass" value="true"/>
+    </bean>
+</beans>

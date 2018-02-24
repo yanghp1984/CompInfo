@@ -11,12 +11,13 @@
           <file>file://$MODULE_DIR$/../../src/main/resources/common/applicationContext-tx.xml</file>
           <file>file://$MODULE_DIR$/../../src/main/resources/common/applicationContext-profiles.xml</file>
         </fileset>
-        <fileset id="fileset" name="ApplicationContext common" removed="false">
+        <fileset id="fileset" name="ApplicationContext common" removed="false" profiles="development,production,test,unitTest">
           <file>file://$MODULE_DIR$/../../src/main/resources/common/applicationContext-common.xml</file>
           <file>file://$MODULE_DIR$/../../src/main/resources/common/applicationContext-dataSource.xml</file>
           <file>file://$MODULE_DIR$/../../src/main/resources/common/applicationContext-myBatis.xml</file>
           <file>file://$MODULE_DIR$/../../src/main/resources/common/applicationContext-profiles.xml</file>
           <file>file://$MODULE_DIR$/../../src/main/resources/common/applicationContext-tx.xml</file>
+          <file>file://$MODULE_DIR$/../../src/main/resources/common/applicationContext-test.xml</file>
         </fileset>
         <fileset id="fileset2" name="ApplicationContext servlet" removed="false">
           <dependency>fileset</dependency>

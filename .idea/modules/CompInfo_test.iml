@@ -2,7 +2,16 @@
 <module external.linked.project.id="CompInfo:test" external.linked.project.path="$MODULE_DIR$/../.." external.root.project.path="$MODULE_DIR$/../.." external.system.id="GRADLE" external.system.module.group="com.emis" external.system.module.type="sourceSet" external.system.module.version="1.0-SNAPSHOT" type="JAVA_MODULE" version="4">
   <component name="FacetManager">
     <facet type="Spring" name="Spring">
-      <configuration />
+      <configuration>
+        <fileset id="fileset" name="ApplicationContext test" removed="false" profiles="development,production,test,unitTest">
+          <file>file://$MODULE_DIR$/../../src/main/resources/common/applicationContext-common.xml</file>
+          <file>file://$MODULE_DIR$/../../src/main/resources/common/applicationContext-dataSource.xml</file>
+          <file>file://$MODULE_DIR$/../../src/main/resources/common/applicationContext-myBatis.xml</file>
+          <file>file://$MODULE_DIR$/../../src/main/resources/common/applicationContext-profiles.xml</file>
+          <file>file://$MODULE_DIR$/../../src/main/resources/common/applicationContext-tx.xml</file>
+          <file>file://$MODULE_DIR$/../../src/test/resources/common/applicationContext-test.xml</file>
+        </fileset>
+      </configuration>
     </facet>
     <facet type="JRebel" name="JRebel">
       <configuration>
